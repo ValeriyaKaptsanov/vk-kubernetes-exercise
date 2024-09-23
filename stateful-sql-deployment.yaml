@@ -1,3 +1,29 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mariadb-pvc
+  labels:
+    app: mariadb
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb-service-internal
+spec:
+  selector:
+    app: mariadb
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+  clusterIP: None
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -14,6 +40,8 @@ spec:
       labels:
         app: mariadb
     spec:
+      volumes:
+        - name: mariadb-pv-claim
       containers:
         - name: mariadb
           image: 992382545251.dkr.ecr.us-east-1.amazonaws.com/valeriya-k8s-repo:valeriya-k8s-mariadb
@@ -29,5 +57,12 @@ spec:
               value: wordpress
           ports:
             - containerPort: 3306
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: mariadb-pv-storage
+      volumes:
+        - name: mariadb-pv-storage
+          persistentVolumeClaim:
+            claimName: mariadb-pvc
       imagePullSecrets:
         - name: regcred

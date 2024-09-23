@@ -9,6 +9,6 @@ spec:
   capacity:
     storage: 3Gi
   accessModes:
-    - ReadWriteOncePod
+    - ReadWriteOnce
   hostPath:
     path: "/mnt/data"
