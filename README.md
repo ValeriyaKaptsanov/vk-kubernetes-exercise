@@ -1,1 +1,1 @@
-Repository for integrative k8s exercise.
+Repository for integrative kubernetes exircise.
