@@ -7,10 +7,10 @@ spec:
     app: wordpress
   ports:
     - port: 80
-      # targetPort: 80
+      targetPort: 80
       protocol: TCP
       nodePort: 31000
-  type: NodePort
+  type: LoadBalancer
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -19,7 +19,7 @@ metadata:
   labels:
     app: wordpress
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: wordpress
